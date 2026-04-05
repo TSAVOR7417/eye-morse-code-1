@@ -2,10 +2,13 @@
 venv/
 .venv/
 env/
+morse-backend/venv/
+morse-backend/.venv/
 
 # Python cache
 __pycache__/
 *.py[cod]
+morse-backend/__pycache__/
 
 # Local tooling/editor files
 .vscode/
