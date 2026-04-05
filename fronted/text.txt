@@ -1,0 +1,1249 @@
+// document.addEventListener('DOMContentLoaded', function() {
+//     // Initialize Particles.js
+//     particlesJS('particles-js', {
+//         particles: {
+//             number: {
+//                 value: 60,
+//                 density: {
+//                     enable: true,
+//                     value_area: 800
+//                 }
+//             },
+//             color: {
+//                 value: "#64ffda"
+//             },
+//             shape: {
+//                 type: "circle",
+//                 stroke: {
+//                     width: 0,
+//                     color: "#000000"
+//                 }
+//             },
+//             opacity: {
+//                 value: 0.3,
+//                 random: true,
+//                 anim: {
+//                     enable: true,
+//                     speed: 1,
+//                     opacity_min: 0.1,
+//                     sync: false
+//                 }
+//             },
+//             size: {
+//                 value: 2,
+//                 random: true,
+//                 anim: {
+//                     enable: true,
+//                     speed: 2,
+//                     size_min: 0.1,
+//                     sync: false
+//                 }
+//             },
+//             line_linked: {
+//                 enable: true,
+//                 distance: 120,
+//                 color: "#64ffda",
+//                 opacity: 0.2,
+//                 width: 1
+//             },
+//             move: {
+//                 enable: true,
+//                 speed: 0.8,
+//                 direction: "none",
+//                 random: true,
+//                 straight: false,
+//                 out_mode: "out",
+//                 bounce: false,
+//                 attract: {
+//                     enable: false,
+//                     rotateX: 600,
+//                     rotateY: 1200
+//                 }
+//             }
+//         },
+//         interactivity: {
+//             detect_on: "canvas",
+//             events: {
+//                 onhover: {
+//                     enable: true,
+//                     mode: "grab"
+//                 },
+//                 onclick: {
+//                     enable: true,
+//                     mode: "push"
+//                 },
+//                 resize: true
+//             },
+//             modes: {
+//                 grab: {
+//                     distance: 120,
+//                     line_linked: {
+//                         opacity: 0.4
+//                     }
+//                 },
+//                 push: {
+//                     particles_nb: 3
+//                 }
+//             }
+//         },
+//         retina_detect: true
+//     });
+
+//     // Simple Custom Cursor
+//     const cursor = document.querySelector('.custom-cursor');
+    
+//     // Smooth cursor movement with requestAnimationFrame
+//     let mouseX = 0;
+//     let mouseY = 0;
+//     let cursorX = 0;
+//     let cursorY = 0;
+    
+//     document.addEventListener('mousemove', (e) => {
+//         mouseX = e.clientX;
+//         mouseY = e.clientY;
+//     });
+    
+//     function updateCursor() {
+//         // Simple linear interpolation for smooth movement
+//         cursorX += (mouseX - cursorX) * 0.2;
+//         cursorY += (mouseY - cursorY) * 0.2;
+        
+//         cursor.style.left = cursorX + 'px';
+//         cursor.style.top = cursorY + 'px';
+        
+//         requestAnimationFrame(updateCursor);
+//     }
+    
+//     // Start cursor animation
+//     updateCursor();
+    
+//     // Hover effects for cursor
+//     const hoverElements = document.querySelectorAll('button, a, .chart-item, .practice-btn, .mode-btn, .toggle-btn, .nav-pill-item, .text-area');
+    
+//     hoverElements.forEach(el => {
+//         el.addEventListener('mouseenter', () => {
+//             cursor.classList.add('hover');
+//         });
+        
+//         el.addEventListener('mouseleave', () => {
+//             cursor.classList.remove('hover');
+//         });
+//     });
+    
+//     // Make cursor react to card hover
+//     const cards = document.querySelectorAll('.spotlight-card');
+//     cards.forEach(card => {
+//         card.addEventListener('mouseenter', () => {
+//             cursor.classList.add('hover');
+//         });
+        
+//         card.addEventListener('mouseleave', () => {
+//             cursor.classList.remove('hover');
+//         });
+//     });
+
+//     // Theme toggle
+//     const toggleBtn = document.querySelector('.toggle-btn');
+//     const body = document.body;
+    
+//     toggleBtn.addEventListener('click', function() {
+//         body.classList.toggle('light-mode');
+//     });
+
+//     // Navigation pill functionality
+//     const navPillItems = document.querySelectorAll('.nav-pill-item');
+//     const sections = document.querySelectorAll('.content-section');
+    
+//     navPillItems.forEach(item => {
+//         item.addEventListener('click', function() {
+//             // Remove active class from all items
+//             navPillItems.forEach(i => i.classList.remove('active'));
+            
+//             // Add active class to clicked item
+//             this.classList.add('active');
+            
+//             // Get the section to show
+//             const sectionId = this.getAttribute('data-section');
+            
+//             // Hide all sections
+//             sections.forEach(section => {
+//                 section.classList.remove('active');
+//             });
+            
+//             // Show selected section
+//             const targetSection = document.getElementById(sectionId);
+//             if (targetSection) {
+//                 targetSection.classList.add('active');
+                
+//                 // Scroll to top of the section
+//                 window.scrollTo({
+//                     top: 0,
+//                     behavior: 'smooth'
+//                 });
+//             }
+//         });
+//     });
+
+//     // Translation logic - FIXED AUDIO PART
+//     const modeBtns = document.querySelectorAll('.mode-btn');
+//     const inputText = document.getElementById('input-text');
+//     const translateBtn = document.getElementById('translate-btn');
+//     const morseOutput = document.getElementById('morse-output');
+//     const textOutput = document.getElementById('text-output');
+//     const translationType = document.getElementById('translation-type');
+//     const audioPlayer = document.getElementById('audio-player');
+//     const playAudioBtn = document.getElementById('play-audio');
+//     const audioSlider = document.getElementById('audio-slider');
+//     const audioProgress = document.getElementById('audio-progress');
+//     const currentTimeEl = document.getElementById('current-time');
+//     const totalTimeEl = document.getElementById('total-time');
+
+//     let currentMode = 'text-to-morse';
+//     let audioContext;
+//     let audioBuffer;
+//     let isPlaying = false;
+//     let startTime;
+//     let progressInterval;
+//     let currentTextToSpeak = '';
+//     let speechUtterance = null;
+
+//     // Morse code dictionary
+//     const morseCode = {
+//         'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+//         'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+//         'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+//         'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+//         'Y': '-.--', 'Z': '--..',
+//         '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-',
+//         '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.',
+//         '.': '.-.-.-', ',': '--..--', '?': '..--..', "'": '.----.', '!': '-.-.--',
+//         '/': '-..-.', '(': '-.--.', ')': '-.--.-', '&': '.-...', ':': '---...',
+//         ';': '-.-.-.', '=': '-...-', '+': '.-.-.', '-': '-....-', '_': '..--.-',
+//         '"': '.-..-.', '$': '...-..-', '@': '.--.-.', ' ': '/'
+//     };
+
+//     // Reverse morse code dictionary
+//     const reverseMorseCode = {};
+//     for (const [char, code] of Object.entries(morseCode)) {
+//         reverseMorseCode[code] = char;
+//     }
+
+//     // Set mode
+//     modeBtns.forEach(btn => {
+//         btn.addEventListener('click', function() {
+//             modeBtns.forEach(b => b.classList.remove('active'));
+//             this.classList.add('active');
+//             currentMode = this.dataset.mode;
+            
+//             if (currentMode === 'text-to-morse') {
+//                 inputText.placeholder = "Enter text to translate to Morse code...";
+//                 translationType.textContent = "Text to Morse Code";
+//                 morseOutput.style.display = 'block';
+//                 textOutput.style.display = 'none';
+//             } else {
+//                 inputText.placeholder = "Enter Morse code to translate to text...";
+//                 translationType.textContent = "Morse to Text";
+//                 morseOutput.style.display = 'none';
+//                 textOutput.style.display = 'block';
+//             }
+            
+//             inputText.value = '';
+//             morseOutput.textContent = '';
+//             textOutput.textContent = '';
+//             audioPlayer.style.display = 'none';
+//             stopAudio(); // Stop any ongoing audio
+//         });
+//     });
+
+//     // Translate function - FIXED
+//     translateBtn.addEventListener('click', function() {
+//         const input = inputText.value.trim();
+        
+//         if (!input) {
+//             alert('Please enter some text or Morse code to translate.');
+//             return;
+//         }
+        
+//         // Stop any ongoing audio
+//         stopAudio();
+        
+//         if (currentMode === 'text-to-morse') {
+//             const morse = textToMorse(input.toUpperCase());
+//             morseOutput.textContent = morse;
+//             textOutput.textContent = input;
+//             textOutput.style.display = 'none';
+//             morseOutput.style.display = 'block';
+            
+//             generateMorseAudio(morse);
+//             audioPlayer.style.display = 'flex';
+            
+//         } else {
+//             const text = morseToText(input);
+//             textOutput.textContent = text;
+//             morseOutput.textContent = input;
+//             morseOutput.style.display = 'none';
+//             textOutput.style.display = 'block';
+            
+//             // Store the text for speech
+//             currentTextToSpeak = text;
+            
+//             // Initialize audio player for text-to-speech
+//             const estimatedDuration = text.length * 0.2; // Slightly longer for speech
+//             totalTimeEl.textContent = formatTime(estimatedDuration);
+//             audioProgress.style.width = '0%';
+//             currentTimeEl.textContent = '0:00';
+            
+//             playAudioBtn.innerHTML = '<i class="fas fa-play"></i>';
+//             isPlaying = false;
+//             audioPlayer.style.display = 'flex';
+//         }
+        
+//         setTimeout(animateMorseCharacters, 100);
+//     });
+
+//     function textToMorse(text) {
+//         return text.toUpperCase().split('').map(char => {
+//             if (char === ' ') return '/';
+//             return morseCode[char] || char;
+//         }).join(' ');
+//     }
+
+//     function morseToText(morse) {
+//         return morse.split(' ').map(code => {
+//             if (code === '/') return ' ';
+//             return reverseMorseCode[code] || code;
+//         }).join('');
+//     }
+
+//     function generateMorseAudio(morse) {
+//         if (!audioContext) {
+//             audioContext = new (window.AudioContext || window.webkitAudioContext)();
+//         }
+        
+//         const dotDuration = 0.1;
+//         const dashDuration = 0.3;
+//         const spaceDuration = 0.1;
+//         const charSpaceDuration = 0.3;
+//         const wordSpaceDuration = 0.7;
+        
+//         const sampleRate = audioContext.sampleRate;
+//         let totalDuration = 0;
+        
+//         for (let i = 0; i < morse.length; i++) {
+//             const char = morse[i];
+//             if (char === '.') {
+//                 totalDuration += dotDuration;
+//             } else if (char === '-') {
+//                 totalDuration += dashDuration;
+//             } else if (char === ' ') {
+//                 totalDuration += charSpaceDuration;
+//             } else if (char === '/') {
+//                 totalDuration += wordSpaceDuration;
+//             }
+//             if (i < morse.length - 1) {
+//                 totalDuration += spaceDuration;
+//             }
+//         }
+        
+//         const bufferLength = Math.ceil(totalDuration * sampleRate);
+//         const buffer = audioContext.createBuffer(1, bufferLength, sampleRate);
+//         const channelData = buffer.getChannelData(0);
+        
+//         let time = 0;
+//         let sampleIndex = 0;
+        
+//         for (let i = 0; i < morse.length; i++) {
+//             const char = morse[i];
+//             let duration = 0;
+//             let frequency = 600;
+            
+//             if (char === '.') {
+//                 duration = dotDuration;
+//             } else if (char === '-') {
+//                 duration = dashDuration;
+//             } else if (char === ' ') {
+//                 duration = charSpaceDuration;
+//                 frequency = 0;
+//             } else if (char === '/') {
+//                 duration = wordSpaceDuration;
+//                 frequency = 0;
+//             }
+            
+//             const toneSamples = Math.floor(duration * sampleRate);
+//             for (let j = 0; j < toneSamples; j++) {
+//                 if (sampleIndex < bufferLength) {
+//                     if (frequency > 0) {
+//                         channelData[sampleIndex] = Math.sin(2 * Math.PI * frequency * time) * 0.5;
+//                     } else {
+//                         channelData[sampleIndex] = 0;
+//                     }
+//                     sampleIndex++;
+//                     time += 1/sampleRate;
+//                 }
+//             }
+            
+//             if (i < morse.length - 1 && morse[i+1] !== ' ' && morse[i+1] !== '/') {
+//                 const spaceSamples = Math.floor(spaceDuration * sampleRate);
+//                 for (let j = 0; j < spaceSamples; j++) {
+//                     if (sampleIndex < bufferLength) {
+//                         channelData[sampleIndex] = 0;
+//                         sampleIndex++;
+//                         time += 1/sampleRate;
+//                     }
+//                 }
+//             }
+//         }
+        
+//         audioBuffer = buffer;
+//         totalTimeEl.textContent = formatTime(totalDuration);
+//         audioProgress.style.width = '0%';
+//         currentTimeEl.textContent = '0:00';
+        
+//         playAudioBtn.innerHTML = '<i class="fas fa-play"></i>';
+//         isPlaying = false;
+//     }
+
+//     // Play audio - FIXED
+//     playAudioBtn.addEventListener('click', function() {
+//         if (currentMode === 'text-to-morse') {
+//             if (!audioBuffer) return;
+            
+//             if (!isPlaying) {
+//                 playMorseAudio();
+//             } else {
+//                 stopAudio();
+//             }
+//         } else {
+//             // Morse to Text mode
+//             if (!currentTextToSpeak) return;
+            
+//             if (!isPlaying) {
+//                 playTextToSpeech(currentTextToSpeak);
+//             } else {
+//                 stopAudio();
+//             }
+//         }
+//     });
+
+//     function playMorseAudio() {
+//         if (!audioBuffer) return;
+        
+//         const source = audioContext.createBufferSource();
+//         source.buffer = audioBuffer;
+        
+//         const gainNode = audioContext.createGain();
+//         gainNode.gain.value = 0.5;
+        
+//         source.connect(gainNode);
+//         gainNode.connect(audioContext.destination);
+        
+//         startTime = audioContext.currentTime;
+//         source.start(0);
+        
+//         playAudioBtn.innerHTML = '<i class="fas fa-pause"></i>';
+//         isPlaying = true;
+        
+//         progressInterval = setInterval(() => {
+//             const elapsed = audioContext.currentTime - startTime;
+//             const duration = audioBuffer.duration;
+            
+//             if (elapsed >= duration) {
+//                 stopAudio();
+//                 return;
+//             }
+            
+//             const progress = (elapsed / duration) * 100;
+//             audioProgress.style.width = `${progress}%`;
+//             currentTimeEl.textContent = formatTime(elapsed);
+//         }, 50);
+        
+//         source.onended = function() {
+//             stopAudio();
+//         };
+//     }
+
+//     function playTextToSpeech(text) {
+//         if (!text || !('speechSynthesis' in window)) {
+//             alert('Text-to-speech not supported in this browser.');
+//             return;
+//         }
+        
+//         // Cancel any ongoing speech
+//         if (speechUtterance) {
+//             speechSynthesis.cancel();
+//         }
+        
+//         speechUtterance = new SpeechSynthesisUtterance(text);
+//         speechUtterance.rate = 0.9;
+//         speechUtterance.pitch = 1;
+//         speechUtterance.volume = 1;
+        
+//         // Estimate duration based on text length
+//         const estimatedDuration = text.length * 0.2;
+//         totalTimeEl.textContent = formatTime(estimatedDuration);
+        
+//         playAudioBtn.innerHTML = '<i class="fas fa-pause"></i>';
+//         isPlaying = true;
+        
+//         let startTime = Date.now();
+//         progressInterval = setInterval(() => {
+//             const elapsed = (Date.now() - startTime) / 1000;
+//             const progress = Math.min((elapsed / estimatedDuration) * 100, 100);
+//             audioProgress.style.width = `${progress}%`;
+//             currentTimeEl.textContent = formatTime(elapsed);
+            
+//             if (progress >= 100) {
+//                 stopAudio();
+//             }
+//         }, 50);
+        
+//         speechUtterance.onend = function() {
+//             stopAudio();
+//         };
+        
+//         speechUtterance.onerror = function() {
+//             stopAudio();
+//         };
+        
+//         speechSynthesis.speak(speechUtterance);
+//     }
+
+//     function stopAudio() {
+//         if (progressInterval) {
+//             clearInterval(progressInterval);
+//             progressInterval = null;
+//         }
+        
+//         if (speechUtterance && 'speechSynthesis' in window) {
+//             speechSynthesis.cancel();
+//             speechUtterance = null;
+//         }
+        
+//         playAudioBtn.innerHTML = '<i class="fas fa-play"></i>';
+//         isPlaying = false;
+        
+//         audioProgress.style.width = '0%';
+//         currentTimeEl.textContent = '0:00';
+//     }
+
+//     function formatTime(seconds) {
+//         const mins = Math.floor(seconds / 60);
+//         const secs = Math.floor(seconds % 60);
+//         return `${mins}:${secs.toString().padStart(2, '0')}`;
+//     }
+
+//     function animateMorseCharacters() {
+//         const morseChars = document.querySelectorAll('.morse-character');
+//         let currentChar = 0;
+        
+//         function animate() {
+//             morseChars.forEach(char => char.classList.remove('active'));
+            
+//             if (morseChars[currentChar]) {
+//                 morseChars[currentChar].classList.add('active');
+//             }
+            
+//             currentChar = (currentChar + 1) % morseChars.length;
+//             setTimeout(animate, 300);
+//         }
+        
+//         if (morseChars.length > 0) {
+//             animate();
+//         }
+//     }
+
+//     // Learn Morse Code Implementation
+//     const alphabetChart = document.getElementById('alphabet-chart');
+//     const numbersChart = document.getElementById('numbers-chart');
+//     const practiceQuestion = document.getElementById('practice-question');
+//     const practiceInput = document.getElementById('practice-input');
+//     const playQuestionBtn = document.getElementById('play-question');
+//     const checkAnswerBtn = document.getElementById('check-answer');
+//     const nextQuestionBtn = document.getElementById('next-question');
+//     const practiceFeedback = document.getElementById('practice-feedback');
+//     const scoreElement = document.getElementById('score');
+//     const totalQuestionsElement = document.getElementById('total-questions');
+//     const streakElement = document.getElementById('streak');
+//     const progressFill = document.getElementById('progress-fill');
+//     const progressPercent = document.getElementById('progress-percent');
+
+//     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+//     const numbers = '0123456789'.split('');
+
+//     let currentQuestion = 0;
+//     let score = 0;
+//     let streak = 0;
+//     let totalQuestions = 10;
+//     const practiceQuestions = [];
+
+//     // Initialize Morse code chart
+//     function initMorseChart() {
+//         alphabetChart.innerHTML = '';
+//         alphabet.forEach(char => {
+//             const item = document.createElement('div');
+//             item.className = 'chart-item';
+//             item.innerHTML = `
+//                 <div class="chart-char">${char}</div>
+//                 <div class="chart-morse">${morseCode[char]}</div>
+//             `;
+            
+//             item.addEventListener('click', function() {
+//                 generateSingleMorseAudio(morseCode[char]);
+//             });
+            
+//             alphabetChart.appendChild(item);
+//         });
+
+//         numbersChart.innerHTML = '';
+//         numbers.forEach(char => {
+//             const item = document.createElement('div');
+//             item.className = 'chart-item';
+//             item.innerHTML = `
+//                 <div class="chart-char">${char}</div>
+//                 <div class="chart-morse">${morseCode[char]}</div>
+//             `;
+            
+//             item.addEventListener('click', function() {
+//                 generateSingleMorseAudio(morseCode[char]);
+//             });
+            
+//             numbersChart.appendChild(item);
+//         });
+//     }
+
+//     function generateSingleMorseAudio(morse) {
+//         if (!audioContext) {
+//             audioContext = new (window.AudioContext || window.webkitAudioContext)();
+//         }
+        
+//         const dotDuration = 0.1;
+//         const dashDuration = 0.3;
+//         const spaceDuration = 0.1;
+        
+//         let totalDuration = 0;
+//         for (let i = 0; i < morse.length; i++) {
+//             totalDuration += (morse[i] === '.') ? dotDuration : dashDuration;
+//             if (i < morse.length - 1) totalDuration += spaceDuration;
+//         }
+        
+//         const sampleRate = audioContext.sampleRate;
+//         const bufferLength = Math.ceil(totalDuration * sampleRate);
+//         const buffer = audioContext.createBuffer(1, bufferLength, sampleRate);
+//         const channelData = buffer.getChannelData(0);
+        
+//         let time = 0;
+//         let sampleIndex = 0;
+        
+//         for (let i = 0; i < morse.length; i++) {
+//             const char = morse[i];
+//             const duration = (char === '.') ? dotDuration : dashDuration;
+//             const frequency = 600;
+            
+//             const toneSamples = Math.floor(duration * sampleRate);
+//             for (let j = 0; j < toneSamples; j++) {
+//                 if (sampleIndex < bufferLength) {
+//                     channelData[sampleIndex] = Math.sin(2 * Math.PI * frequency * time) * 0.5;
+//                     sampleIndex++;
+//                     time += 1/sampleRate;
+//                 }
+//             }
+            
+//             if (i < morse.length - 1) {
+//                 const spaceSamples = Math.floor(spaceDuration * sampleRate);
+//                 for (let j = 0; j < spaceSamples; j++) {
+//                     if (sampleIndex < bufferLength) {
+//                         channelData[sampleIndex] = 0;
+//                         sampleIndex++;
+//                         time += 1/sampleRate;
+//                     }
+//                 }
+//             }
+//         }
+        
+//         const source = audioContext.createBufferSource();
+//         source.buffer = buffer;
+        
+//         const gainNode = audioContext.createGain();
+//         gainNode.gain.value = 0.5;
+        
+//         source.connect(gainNode);
+//         gainNode.connect(audioContext.destination);
+//         source.start(0);
+//     }
+
+//     function initPractice() {
+//         practiceQuestions.length = 0;
+//         const allChars = [...alphabet, ...numbers];
+        
+//         for (let i = 0; i < totalQuestions; i++) {
+//             const randomChar = allChars[Math.floor(Math.random() * allChars.length)];
+//             practiceQuestions.push({
+//                 char: randomChar,
+//                 morse: morseCode[randomChar]
+//             });
+//         }
+        
+//         currentQuestion = 0;
+//         score = 0;
+//         streak = 0;
+//         scoreElement.textContent = score;
+//         totalQuestionsElement.textContent = totalQuestions;
+//         streakElement.textContent = streak;
+        
+//         loadQuestion();
+//         updateProgress();
+//     }
+
+//     function loadQuestion() {
+//         const question = practiceQuestions[currentQuestion];
+//         const questionElement = document.getElementById('practice-question');
+//         questionElement.innerHTML = `What character does this Morse code represent?<br>
+//             <span id="practice-morse" style="font-family: 'Courier New'; color: var(--accent-primary); font-weight: bold; font-size: 1.3rem; margin-top: 0.5rem; display: block;">
+//                 ${question.morse}
+//             </span>`;
+//         practiceInput.value = '';
+//         practiceFeedback.style.display = 'none';
+//         practiceFeedback.className = '';
+//         practiceFeedback.textContent = '';
+//     }
+
+//     function updateProgress() {
+//         const progress = Math.min(((currentQuestion + 1) / practiceQuestions.length) * 100, 100);
+//         progressFill.style.width = `${progress}%`;
+//         progressPercent.textContent = `${Math.round(progress)}%`;
+//     }
+
+//     // Event listeners for practice
+//     playQuestionBtn.addEventListener('click', function() {
+//         const question = practiceQuestions[currentQuestion];
+//         generateSingleMorseAudio(question.morse);
+//     });
+
+//     checkAnswerBtn.addEventListener('click', function() {
+//         const question = practiceQuestions[currentQuestion];
+//         const userAnswer = practiceInput.value.trim().toUpperCase();
+        
+//         if (!userAnswer) {
+//             showFeedback('Please enter an answer', 'warning');
+//             return;
+//         }
+        
+//         if (userAnswer === question.char) {
+//             score++;
+//             streak++;
+//             showFeedback(`Correct! "${question.morse}" is the character ${question.char}`, 'success');
+//         } else {
+//             streak = 0;
+//             showFeedback(`Incorrect. "${question.morse}" is the character ${question.char}`, 'error');
+//         }
+        
+//         scoreElement.textContent = score;
+//         streakElement.textContent = streak;
+//     });
+
+//     nextQuestionBtn.addEventListener('click', function() {
+//         if (currentQuestion < practiceQuestions.length - 1) {
+//             currentQuestion++;
+//             loadQuestion();
+//             updateProgress();
+//         } else {
+//             showFeedback(`Practice completed! Final score: ${score}/${totalQuestions}`, 'success');
+//             setTimeout(() => {
+//                 initPractice();
+//             }, 2000);
+//         }
+//     });
+
+//     function showFeedback(message, type) {
+//         practiceFeedback.textContent = message;
+//         practiceFeedback.style.display = 'block';
+        
+//         if (type === 'success') {
+//             practiceFeedback.style.background = 'rgba(16, 185, 129, 0.2)';
+//             practiceFeedback.style.color = '#10b981';
+//             practiceFeedback.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+//         } else if (type === 'error') {
+//             practiceFeedback.style.background = 'rgba(239, 68, 68, 0.2)';
+//             practiceFeedback.style.color = '#ef4444';
+//             practiceFeedback.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+//         } else {
+//             practiceFeedback.style.background = 'rgba(245, 158, 11, 0.2)';
+//             practiceFeedback.style.color = '#f59e0b';
+//             practiceFeedback.style.border = '1px solid rgba(245, 158, 11, 0.3)';
+//     }
+//     }
+
+//     // Initialize
+//     initMorseChart();
+//     initPractice();
+//     setTimeout(animateMorseCharacters, 1000);
+
+//    // ---------------- CAMERA BACKEND INTEGRATION ----------------
+
+// const startCameraBtn = document.getElementById("start-camera-btn");
+// const cameraOutput = document.getElementById("camera-output");
+// const clearBtn = document.getElementById("clear-camera-text");
+
+// let cameraInterval = null;
+// let cameraActive = false;
+
+// startCameraBtn.addEventListener("click", function () {
+  
+//     // 🔴 STOP LIGHT DETECTION FIRST
+//     if (lightRunning) {
+//         lightRunning = false;
+//         startLightBtn.innerHTML = "Start Light Detection";
+
+//         if (video && video.srcObject) {
+//             video.srcObject.getTracks().forEach(t => t.stop());
+//         }
+
+//         lightOutput.textContent = "Light stopped (switched to Camera)";
+//     }
+
+//     // ✅ START CAMERA
+//     if (!cameraActive) {
+//         cameraActive = true;
+
+//         document.getElementById("camera-feed").src = "http://127.0.0.1:5000/video_feed";
+
+//         startCameraBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Camera Detection';
+//         cameraOutput.textContent = "Listening for Morse input...";
+
+//         cameraInterval = setInterval(() => {
+//             fetch("http://127.0.0.1:5000/get_text")
+//                 .then(res => res.json())
+//                 .then(data => {
+//                     const text = data.text || "";
+
+//                     if (text.trim().length > 0) {
+//                         cameraOutput.textContent = text;
+//                         clearBtn.style.display = "block";
+//                     } else {
+//                         cameraOutput.textContent = "Listening for Morse input...";
+//                         clearBtn.style.display = "none";
+//                     }
+//                 })
+//                 .catch(err => {
+//                     cameraOutput.textContent = "Backend not connected";
+//                 });
+//         }, 1000);
+
+//     } 
+//     // ✅ STOP CAMERA
+//     else {
+//         cameraActive = false;
+
+//         document.getElementById("camera-feed").src = ""; // ✅ IMPORTANT FIX
+
+//         startCameraBtn.innerHTML = '<i class="fas fa-video"></i> Start Camera Detection';
+//         clearInterval(cameraInterval);
+//         cameraOutput.textContent = "Camera stopped.";
+//     }
+    
+// });
+
+// clearBtn.addEventListener("click", () => {
+//     fetch("http://127.0.0.1:5000/clear_text")
+//         .then(() => {
+//             cameraOutput.textContent = "Listening for Morse input...";
+//             clearBtn.style.display = "none";
+//         });
+// });
+
+// // // ---------------- FRONTEND AUDIO MORSE DETECTION ----------------
+
+// // const startAudioDetectionBtn = document.getElementById("start-audio-detection");
+// // const audioDetectionOutput = document.getElementById("audio-detection-output");
+// // const clearAudioDetectionBtn = document.getElementById("clear-audio-detection");
+
+// // // hide clear button initially
+// // clearAudioDetectionBtn.style.display = "none";
+
+
+
+// // let audioContextMic;
+// // let analyser;
+// // let microphone;
+// // let audioDetectionRunning = false;
+// // let ambientNoise = 0;
+// // let noiseSamples = 0;
+
+
+// // let morseSequence = "";
+// // let lastSoundTime = null;
+// // let lastSilenceTime = null;
+
+// // const DOT_THRESHOLD = 150;     // ms
+// // const DASH_THRESHOLD = 350;    // ms
+// // const LETTER_GAP = 500;        // ms
+// // const WORD_GAP = 1200;         // ms
+// // const SOUND_THRESHOLD = 40;    // volume sensitivity decible madhe aahe
+
+// // function measureAmbientNoise() {
+
+// //     const dataArray = new Uint8Array(analyser.frequencyBinCount);
+// //     analyser.getByteFrequencyData(dataArray);
+
+// //     let volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
+
+// //     ambientNoise += volume;
+// //     noiseSamples++;
+
+// //     if (noiseSamples < 30) {
+// //         requestAnimationFrame(measureAmbientNoise);
+// //     } else {
+// //         ambientNoise = ambientNoise / noiseSamples;
+// //         console.log("Ambient noise level:", ambientNoise);
+// //         detectMorseAudio();
+// //     }
+// // }
+
+
+// // function detectMorseAudio() {
+
+// //     const dataArray = new Uint8Array(analyser.frequencyBinCount);
+// //     analyser.getByteFrequencyData(dataArray);
+
+// //     let volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
+
+// //     let now = Date.now();
+
+// //     if (volume > ambientNoise + 35){   // Increased threshold
+
+// //         if (!lastSoundTime) {
+// //             lastSoundTime = now;
+// //         }
+
+// //         lastSilenceTime = null;
+
+// //     } else {
+
+// //         if (lastSoundTime) {
+// //             let duration = now - lastSoundTime;
+
+// //             if (duration < 151) {
+// //                 morseSequence += ".";
+// //             } else {
+// //                 morseSequence += "-";
+// //             }
+
+// //             lastSoundTime = null;
+// //             lastSilenceTime = now;
+// //         }
+
+// //         if (lastSilenceTime) {
+// //             let silenceDuration = now - lastSilenceTime;
+
+// //             if (silenceDuration > 600 && morseSequence.length > 0) {
+// //                 let decodedChar = reverseMorseCode[morseSequence] || "";
+// //                 audioDetectionOutput.textContent += decodedChar;
+// //                 if (audioDetectionOutput.textContent.trim().length > 0) {
+// //     clearAudioDetectionBtn.style.display = "block";
+// // }
+
+// //                 morseSequence = "";
+// //                 lastSilenceTime = null;
+// //             }
+
+// //             if (silenceDuration > 1500) {
+// //                 audioDetectionOutput.textContent += " ";
+// //                 if (audioDetectionOutput.textContent.trim().length > 0) {
+// //     clearAudioDetectionBtn.style.display = "block";
+// // }
+
+// //                 lastSilenceTime = null;
+// //             }
+// //         }
+// //     }
+
+// //     if (audioDetectionRunning) {
+// //         requestAnimationFrame(detectMorseAudio);
+// //     }
+// // }
+
+
+// // startAudioDetectionBtn.addEventListener("click", async function () {
+
+// //     if (!audioDetectionRunning) {
+
+// //         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+// //         audioContextMic = new (window.AudioContext || window.webkitAudioContext)();
+// //         analyser = audioContextMic.createAnalyser();
+// //         microphone = audioContextMic.createMediaStreamSource(stream);
+
+// //         microphone.connect(analyser);
+// //         analyser.fftSize = 2048;
+
+// //         audioDetectionRunning = true;
+// //         startAudioDetectionBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Audio Detection';
+// //         audioDetectionOutput.textContent = "";
+
+// //         measureAmbientNoise();
+
+
+// //     } else {
+
+// //         audioDetectionRunning = false;
+// //         startAudioDetectionBtn.innerHTML = '<i class="fas fa-microphone"></i> Start Audio Detection';
+
+// //         if (audioContextMic) {
+// //             audioContextMic.close();
+// //         }
+
+// //         audioDetectionOutput.textContent += "\n(Audio stopped)";
+// //     }
+// // });
+
+// // clearAudioDetectionBtn.addEventListener("click", () => {
+// //     audioDetectionOutput.textContent = "Waiting for Morse audio...";
+// //     clearAudioDetectionBtn.style.display = "none";
+// // });
+
+
+
+// // });
+
+// // ---------------- SIMPLE AUDIO DETECTION (STABLE DEMO VERSION) ----------------
+
+// const startAudioDetectionBtn = document.getElementById("start-audio-detection");
+// const audioDetectionOutput = document.getElementById("audio-detection-output");
+// const clearAudioDetectionBtn = document.getElementById("clear-audio-detection");
+
+// clearAudioDetectionBtn.style.display = "none";
+// let decodeTimeout = null;
+// let audioContextMic;
+// let analyser;
+// let microphone;
+// let stream;
+
+// let running = false;
+
+// let morse = "";
+// let lastState = false;
+// let lastChangeTime = 0;
+
+// // SAFE TIMINGS (works with your app)
+// const DOT_MAX = 200;
+// const LETTER_GAP = 300;
+// const WORD_GAP = 900;
+
+// function getVolume() {
+//     const data = new Uint8Array(analyser.fftSize);
+//     analyser.getByteTimeDomainData(data);
+
+//     let sum = 0;
+//     for (let i = 0; i < data.length; i++) {
+//         let v = (data[i] - 128) / 128;
+//         sum += v * v;
+//     }
+//     return Math.sqrt(sum / data.length) * 100;
+// }
+
+// let baseNoise = 0;
+
+// function calibrate() {
+//     let count = 0;
+//     let total = 0;
+
+//     function measure() {
+//         total += getVolume();
+//         count++;
+
+//         if (count < 50) {
+//             requestAnimationFrame(measure);
+//         } else {
+//             baseNoise = total / count;
+//             loop();
+//         }
+//     }
+
+//     measure();
+// }
+
+// function loop() {
+//     const now = Date.now();
+//     const volume = getVolume();
+
+//     const isSound = volume > baseNoise + 15;
+
+//     // state change
+//     if (isSound !== lastState) {
+
+//         const duration = now - lastChangeTime;
+
+//         if (lastState === true) {
+//     // sound ended
+
+//     if (duration < DOT_MAX) {
+//         morse += ".";
+//     } else {
+//         morse += "-";
+//     }
+
+//     // 🔥 AUTO DECODE after short delay
+//     if (decodeTimeout) clearTimeout(decodeTimeout);
+
+//     decodeTimeout = setTimeout(() => {
+//         decode();
+//     }, 500);
+
+
+//         } else {
+//             // silence ended
+
+//             if (duration > WORD_GAP) {
+//                 decode();
+//                 audioDetectionOutput.textContent += " ";
+//             } else if (duration > LETTER_GAP) {
+//     if (decodeTimeout) clearTimeout(decodeTimeout);
+//     decode();
+// }
+//         }
+
+//         lastState = isSound;
+//         lastChangeTime = now;
+//     }
+
+//     if (running) requestAnimationFrame(loop);
+// }
+
+// function decode() {
+//     if (morse.length === 0) return;
+
+//     const char = reverseMorseCode[morse] || "";
+//     audioDetectionOutput.textContent += char;
+
+//     if (audioDetectionOutput.textContent.trim().length > 0) {
+//         clearAudioDetectionBtn.style.display = "block";
+//     }
+
+//     morse = "";
+// }
+
+// // START / STOP
+// startAudioDetectionBtn.addEventListener("click", async () => {
+
+//     if (!running) {
+//         stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+//         audioContextMic = new AudioContext();
+//         analyser = audioContextMic.createAnalyser();
+//         microphone = audioContextMic.createMediaStreamSource(stream);
+
+//         analyser.fftSize = 2048;
+//         microphone.connect(analyser);
+
+//         running = true;
+//         audioDetectionOutput.textContent = "Calibrating... stay silent";
+
+//         calibrate();
+
+//         startAudioDetectionBtn.innerHTML = '<i class="fas fa-stop"></i> Stop Audio Detection';
+
+//     } else {
+//         running = false;
+
+//         startAudioDetectionBtn.innerHTML = '<i class="fas fa-microphone"></i> Start Audio Detection';
+
+//         if (audioContextMic) audioContextMic.close();
+//         if (stream) stream.getTracks().forEach(t => t.stop());
+
+//         audioDetectionOutput.textContent += "\n(Audio stopped)";
+//     }
+// });
+
+// // CLEAR
+// clearAudioDetectionBtn.addEventListener("click", () => {
+//     audioDetectionOutput.textContent = "Waiting for Morse audio...";
+//     clearAudioDetectionBtn.style.display = "none";
+// });
+
+// // ---------------- LIGHT DETECTION (FINAL WORKING) ----------------
+
+// // const startLightBtn = document.getElementById("start-light-btn");
+// // const lightOutput = document.getElementById("light-output");
+// // const clearLightBtn = document.getElementById("clear-light-btn");
+
+// // let lightRunning = false;
+// // let video, canvas, ctx;
+
+// // startLightBtn.addEventListener("click", async () => {
+
+// //     if (!lightRunning) {
+
+// //         // 🔴 STOP CAMERA FIRST
+// //         if (cameraActive) {
+// //             cameraActive = false;
+// //             clearInterval(cameraInterval);
+// //             document.getElementById("camera-feed").src = "";
+// //             startCameraBtn.innerHTML = '<i class="fas fa-video"></i> Start Camera Detection';
+// //             cameraOutput.textContent = "Camera stopped (switched to Light)";
+// //         }
+
+// //         video = document.getElementById("light-video");
+// //         canvas = document.getElementById("light-canvas");
+// //         ctx = canvas.getContext("2d");
+
+// //         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+// //         video.srcObject = stream;
+
+// //         lightRunning = true;
+// //         startLightBtn.innerHTML = "Stop Light Detection";
+
+// //         // ✅ WAIT for camera
+// //         video.onloadedmetadata = () => {
+// //             video.play();
+// //             setTimeout(() => detectLight(), 300);
+// //         };
+
+// //     } else {
+// //         lightRunning = false;
+// //         startLightBtn.innerHTML = "Start Light Detection";
+
+// //         if (video && video.srcObject) {
+// //             video.srcObject.getTracks().forEach(t => t.stop());
+// //         }
+// //     }
+// // });
+
+// // function detectLight() {
+
+// //     function loop() {
+
+// //         if (!lightRunning) return;
+
+// //         if (!video.videoWidth) {
+// //             requestAnimationFrame(loop);
+// //             return;
+// //         }
+
+// //         canvas.width = video.videoWidth;
+// //         canvas.height = video.videoHeight;
+
+// //         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+// //         const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
+// //         const data = frame.data;
+
+// //         let brightness = 0;
+
+// //         for (let i = 0; i < data.length; i += 4) {
+// //             brightness += data[i] + data[i+1] + data[i+2];
+// //         }
+
+// //         brightness = brightness / (data.length / 4);
+
+// //         if (brightness > 140) {
+// //             lightOutput.textContent = "💡 LIGHT DETECTED";
+// //         } else {
+// //             lightOutput.textContent = "🌑 NO LIGHT";
+// //         }
+
+// //         requestAnimationFrame(loop);
+// //     }
+
+// //     loop();
+// // }
+// //});

@@ -1,0 +1,331 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuminaFusion - Morse Code Detection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="custom-cursor" aria-hidden="true"></div>
+    <div class="dark-veil"></div>
+    <div id="particles-js" aria-hidden="true"></div>
+
+    <nav class="navbar">
+        <div class="logo-container">
+            <div class="logo">LF</div>
+            <div class="logo-text">LuminaFusion</div>
+        </div>
+
+        <div class="nav-pill" role="tablist" aria-label="Primary sections">
+            <button class="nav-pill-item active" data-section="home" type="button" role="tab" aria-selected="true">
+                <i class="fas fa-home"></i> Home
+            </button>
+            <button class="nav-pill-item" data-section="about" type="button" role="tab" aria-selected="false">
+                <i class="fas fa-info-circle"></i> About
+            </button>
+            <button class="nav-pill-item" data-section="features" type="button" role="tab" aria-selected="false">
+                <i class="fas fa-star"></i> Features
+            </button>
+            <button class="nav-pill-item" data-section="project" type="button" role="tab" aria-selected="false">
+                <i class="fas fa-project-diagram"></i> Project
+            </button>
+        </div>
+
+        <div class="theme-toggle-container">
+            <button class="toggle-btn" type="button" aria-label="Toggle theme">
+                <i class="fas fa-moon toggle-icon"></i>
+                <div class="toggle-slider"></div>
+                <i class="fas fa-sun toggle-icon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section id="home" class="content-section active">
+            <header class="header">
+                <h1 class="project-title">LuminaFusion</h1>
+                <p class="subtitle">
+                    Advanced Morse code detection with real-time translation, guided learning, and accessible audio feedback.
+                </p>
+            </header>
+
+            <div class="cards-container">
+                <div class="spotlight-card">
+                    <div class="card-number">1</div>
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h2 class="card-title">Translation</h2>
+                        <p class="card-description">
+                            Convert text to Morse code and vice versa. Audio plays Morse code for text-to-Morse and speaks translated text for Morse-to-text.
+                        </p>
+
+                        <div class="mode-selector">
+                            <button class="mode-btn active" data-mode="text-to-morse" type="button">Text to Morse</button>
+                            <button class="mode-btn" data-mode="morse-to-text" type="button">Morse to Text</button>
+                        </div>
+
+                        <textarea class="text-area" id="input-text" placeholder="Enter text to translate to Morse code...">LUMINA FUSION</textarea>
+
+                        <button class="translate-btn" id="translate-btn" type="button">
+                            <i class="fas fa-exchange-alt"></i> Translate
+                        </button>
+
+                        <div class="output-display">
+                            <div class="output-title">
+                                <span>Translation Result</span>
+                                <span id="translation-type">Text to Morse Code</span>
+                            </div>
+
+                            <div id="morse-output" class="morse-display">
+                                .-.. ..- -- .. -. .- / ..-. ..- ... .. --- -.
+                            </div>
+
+                            <div id="text-output" class="text-output" style="display: none;">
+                                LUMINA FUSION
+                            </div>
+
+                            <div class="audio-player" id="audio-player" style="display: none;">
+                                <button class="audio-btn" id="play-audio" type="button" aria-label="Play audio">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <div class="audio-slider" id="audio-slider" aria-hidden="true">
+                                    <div class="audio-progress" id="audio-progress"></div>
+                                </div>
+                                <div class="audio-time">
+                                    <span id="current-time">0:00</span> / <span id="total-time">0:00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="spotlight-card">
+                    <div class="card-number">2</div>
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+
+                        <h2 class="card-title">Camera Detection</h2>
+                        <p class="card-description">
+                            Use your camera to detect Morse code from eye blinks in real time.
+                        </p>
+
+                        <div class="camera-video-box">
+                            <div id="camera-placeholder" class="camera-placeholder-text">
+                                Camera feed will appear here after you start detection.
+                            </div>
+                            <video id="camera-feed" class="camera-video camera-video-hidden" autoplay muted playsinline></video>
+                            <img id="camera-stream" alt="Processed camera feed" class="camera-video camera-video-hidden">
+                        </div>
+
+                        <div class="camera-text-box">
+                            <div id="camera-output">Waiting for Morse input...</div>
+                        </div>
+
+                        <button id="clear-camera-text" class="camera-secondary-btn" type="button">
+                            <i class="fas fa-trash"></i> Clear Text
+                        </button>
+
+                        <button class="translate-btn" id="start-camera-btn" type="button">
+                            <i class="fas fa-video"></i> Start Camera Detection
+                        </button>
+                    </div>
+                </div>
+
+                <div class="spotlight-card">
+                    <div class="card-number">3</div>
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-microphone"></i>
+                        </div>
+
+                        <h2 class="card-title">Audio Detection</h2>
+                        <p class="card-description">
+                            Detect Morse code from beep sounds using your microphone in real time.
+                        </p>
+
+                        <div class="camera-text-box">
+                            <div id="audio-detection-output">Waiting for Morse audio...</div>
+                        </div>
+
+                        <button id="clear-audio-detection" class="camera-secondary-btn" type="button">
+                            <i class="fas fa-trash"></i> Clear Text
+                        </button>
+
+                        <button class="translate-btn" id="start-audio-detection" type="button">
+                            <i class="fas fa-microphone"></i> Start Audio Detection
+                        </button>
+                    </div>
+                </div>
+
+                <div class="spotlight-card">
+                    <div class="card-number">4</div>
+                    <div class="card-content">
+                        <div class="card-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h2 class="card-title">Learn Morse</h2>
+                        <p class="card-description">
+                            Study the full Morse alphabet and numbers chart, then practice with instant feedback and audio playback.
+                        </p>
+
+                        <div class="learn-section">
+                            <div class="morse-chart">
+                                <h3 class="chart-title">
+                                    <i class="fas fa-chart-bar"></i> Morse Code Chart
+                                </h3>
+
+                                <div class="chart-section">
+                                    <h4 class="section-title">Alphabet (A-Z)</h4>
+                                    <div class="chart-grid" id="alphabet-chart"></div>
+                                </div>
+
+                                <div class="chart-section">
+                                    <h4 class="section-title">Numbers (0-9)</h4>
+                                    <div class="chart-grid" id="numbers-chart"></div>
+                                </div>
+                            </div>
+
+                            <div class="practice-area">
+                                <h3 class="chart-title">
+                                    <i class="fas fa-dumbbell"></i> Practice
+                                </h3>
+
+                                <div id="practice-question">
+                                    What character does this Morse code represent?<br>
+                                    <span id="practice-morse" class="practice-morse">.-</span>
+                                </div>
+
+                                <input
+                                    type="text"
+                                    id="practice-input"
+                                    placeholder="Type your answer (single character)"
+                                    maxlength="1"
+                                    autocomplete="off"
+                                >
+
+                                <div class="practice-controls">
+                                    <button class="practice-btn" id="play-question" type="button">
+                                        <i class="fas fa-volume-up"></i> Play
+                                    </button>
+                                    <button class="practice-btn" id="check-answer" type="button">
+                                        <i class="fas fa-check"></i> Check
+                                    </button>
+                                    <button class="practice-btn" id="next-question" type="button">
+                                        <i class="fas fa-forward"></i> Next
+                                    </button>
+                                </div>
+
+                                <div id="practice-feedback" class="practice-feedback" style="display: none;"></div>
+
+                                <div class="practice-stats">
+                                    <span>Score: <span id="score">0</span>/<span id="total-questions">10</span></span>
+                                    <span>Streak: <span id="streak">0</span></span>
+                                </div>
+                            </div>
+
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Progress</span>
+                                    <span id="progress-percent">10%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="progress-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="content-section">
+            <h2 class="section-header">About LuminaFusion</h2>
+            <div class="section-content">
+                <p>LuminaFusion is an advanced Morse code detection and translation system designed to bridge traditional communication methods with modern web technology. It provides tools for learning, translating, and detecting Morse code across multiple input modes.</p>
+
+                <p class="spaced-copy">The project focuses on preserving Morse code as a practical communication method while making it accessible to students, hobbyists, emergency responders, and assistive technology use cases.</p>
+
+                <div class="info-panel">
+                    <h3>Why Morse Code Still Matters</h3>
+                    <ul>
+                        <li>Emergency communication in low-bandwidth conditions</li>
+                        <li>Accessibility for alternative input methods</li>
+                        <li>Historical preservation of communication systems</li>
+                        <li>Education around timing, encoding, and signal patterns</li>
+                        <li>Reliable fallback communication in constrained environments</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="content-section">
+            <h2 class="section-header">Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Bidirectional Translation</h3>
+                    <p class="feature-copy">Convert text to Morse code and vice versa with audio feedback.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="feature-title">Interactive Learning</h3>
+                    <p class="feature-copy">Study the chart, hear symbols, and practice with instant scoring.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3 class="feature-title">Blink Detection</h3>
+                    <p class="feature-copy">Use a connected local backend to detect Morse code from eye blinks.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headphones"></i>
+                    </div>
+                    <h3 class="feature-title">Audio Integration</h3>
+                    <p class="feature-copy">Play Morse beeps, speak translated text, and detect audio timing patterns.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="project" class="content-section">
+            <h2 class="section-header">Project Details</h2>
+            <div class="section-content">
+                <p>The frontend uses static HTML, CSS, and JavaScript to provide a lightweight Morse code experience with audio synthesis, speech output, responsive layout, and optional local backend integration for camera-based detection.</p>
+
+                <div class="spaced-copy">
+                    <h3 class="subheading">Technical Architecture</h3>
+                    <ul>
+                        <li>Web Audio API for Morse tone generation and microphone analysis</li>
+                        <li>Speech synthesis for Morse-to-text playback</li>
+                        <li>Responsive CSS Grid and Flexbox layout</li>
+                        <li>Client-side practice mode with randomized questions</li>
+                        <li>Optional localhost backend integration for camera detection</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>LuminaFusion &copy; 2026 | Professional Morse Code Detection System</p>
+            <p class="footer-copy">Designed for practical signal learning and modern browser-based interaction.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
